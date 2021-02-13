@@ -11,6 +11,5 @@ namespace DAL.Entities.Peoples
         public Guid Id { get; set; }
         public int CarNumber { get; set; }
         public List<TimeInTeam> Сareer { get; set; }
-
     }
 }
