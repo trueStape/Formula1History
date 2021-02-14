@@ -16,6 +16,5 @@ namespace DAL.Entities.Team
         public TeamEntity NextTeam { get; set; }
         public List<DriverEntity> Drivers { get; set; }
         public List<ManagerEntity> Managers { get; set; }
-        
     }
 }

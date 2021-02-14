@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DAL.Entities.Peoples;
+using DAL.Entities.Race;
+using DAL.Entities.Team;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL
 {
@@ -9,8 +12,14 @@ namespace DAL
         {
 
         }
+
         //TODO 1 Add Entity relationship
-        //public DbSet<UserEntity> User { get; set; }
+        public DbSet<DriverEntity> Driver { get; set; }
+        public DbSet<ManagerEntity> Manager { get; set; }
+        public DbSet<RaceWeekendEntity> RaceWeekend { get; set; }
+        public DbSet<RaceYearEntity> RaceYear { get; set; }
+        public DbSet<TeamEntity> Team { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

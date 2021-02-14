@@ -10,7 +10,7 @@ namespace DAL.Entities.Race
     {
         [Key]
         public Guid Id { get; set; }
-        public string RaceName { get; set; } 
+        public string RaceName { get; set; }
         public string Country { get; set; }
         public string Descriptions { get; set; }
         public DateTime StartWeekend { get; set; }

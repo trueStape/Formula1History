@@ -5,11 +5,13 @@ using DAL.Entities.Team;
 
 namespace DAL.Entities.Peoples
 {
-    public class DriverEntity : People
+    public class DriverEntity : Peoples.People
     {
         [Key]
         public Guid Id { get; set; }
         public int CarNumber { get; set; }
-        public List<TimeInTeam> Сareer { get; set; }
+
+        //TODO 5 Add relationship between RaceYear and Team
+        //public List<TimeInTeam> Сareer { get; set; }
     }
 }
