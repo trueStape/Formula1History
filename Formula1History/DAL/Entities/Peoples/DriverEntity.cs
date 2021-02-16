@@ -5,7 +5,7 @@ using DAL.Entities.Team;
 
 namespace DAL.Entities.Peoples
 {
-    public class DriverEntity : Peoples.People
+    public class DriverEntity : People
     {
         [Key]
         public Guid Id { get; set; }

@@ -1,5 +1,9 @@
 using AutoMapper;
+using BLL.Interfaces;
+using BLL.Services;
 using DAL;
+using DAL.Interfaces;
+using DAL.Repositories;
 using Formula1History.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +42,7 @@ namespace Formula1History
                 mc.AddProfile(new MappingProfile());
             });
             var mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             //Swagger
             services.AddSwaggerGen(x =>
@@ -45,11 +50,11 @@ namespace Formula1History
                 x.SwaggerDoc("v1", new OpenApiInfo { Title = "SoftLine Api", Version = "v1" });
             });
 
-            services.AddSingleton(mapper);
+           
             //TODO 3 Add Dependency life cycle (Dependency injection)
             //Registration User services
-            //services.AddTransient<IUserRepository, UserRepository>();
-            //services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IDriverRepository, DriverRepository>();
+            services.AddTransient<IDriverService, DriverService>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
