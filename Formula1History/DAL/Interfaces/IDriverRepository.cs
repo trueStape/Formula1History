@@ -5,9 +5,8 @@ using DAL.Entities.Peoples;
 
 namespace DAL.Interfaces
 {
-    public interface IDriverRepository : IGenericRepository<DriverEntity>
+    public interface IDriverRepository : IGenericRepository<DriverEntity>, IPeople<DriverEntity>
     {
-        Task<DriverEntity> GetDriverAsync(Guid id);
-        Task<List<DriverEntity>> GetAllDriversAsync();
+
     }
 }

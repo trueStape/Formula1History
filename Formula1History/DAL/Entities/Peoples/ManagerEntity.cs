@@ -5,7 +5,7 @@ using DAL.Entities.Team;
 
 namespace DAL.Entities.Peoples
 {
-    public class ManagerEntity
+    public class ManagerEntity : People
     {
         [Key]
         public Guid Id { get; set; }

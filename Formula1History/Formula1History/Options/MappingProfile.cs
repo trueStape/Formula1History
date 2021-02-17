@@ -11,6 +11,9 @@ namespace Formula1History.Options
             // Add as many of these lines as you need to map your objects
             CreateMap<DriverEntity, DriverModel>();
             CreateMap<DriverModel, DriverEntity>();
+
+            CreateMap<ManagerEntity, ManagerModel>();
+            CreateMap<ManagerModel, ManagerEntity>();
         }
     }
 }

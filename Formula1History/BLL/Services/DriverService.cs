@@ -32,7 +32,7 @@ namespace BLL.Services
 
         public async Task<DriverModel> GetDriverAsync(Guid driverId)
         {
-            var driverEntity = await _driverRepository.GetDriverAsync(driverId);
+            var driverEntity = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
             var driverModel = _mapper.Map<DriverModel>(driverEntity);
 
             return driverModel;
@@ -40,7 +40,7 @@ namespace BLL.Services
 
         public async Task<List<DriverModel>> GetAllDriversAsync()
         {
-            var drivers = await _driverRepository.GetAllDriversAsync();
+            var drivers = await _driverRepository.GetAllPeopleAsync(x => x.LastName);
             var driverModels = _mapper.Map<List<DriverEntity>, List<DriverModel>>(drivers);
 
             return driverModels;
@@ -48,7 +48,7 @@ namespace BLL.Services
 
         public async Task<string> DeleteDriverAsync(Guid driverId)
         {
-            var driver = await _driverRepository.GetDriverAsync(driverId);
+            var driver = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
             if (driver == null) return "Driver is not found";
 
             await _driverRepository.SaveAsync();
@@ -58,7 +58,7 @@ namespace BLL.Services
 
         public async Task<string> UpdateDriverAsync(Guid driverId, DriverModel driverModel)
         {
-            var driver = await _driverRepository.GetDriverAsync(driverId);
+            var driver = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
             if (driver == null) return "Driver is not found";
 
             //TODO Add model attributes for update driver
