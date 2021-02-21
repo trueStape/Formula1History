@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BLL.Models;
 using DAL.Entities.Peoples;
+using DAL.Entities.Race;
+using DAL.Entities.Team;
 
 namespace Formula1History.Options
 {
@@ -14,6 +16,19 @@ namespace Formula1History.Options
 
             CreateMap<ManagerEntity, ManagerModel>();
             CreateMap<ManagerModel, ManagerEntity>();
+
+            CreateMap<RaceWeekendEntity, RaceWeekendModel>();
+            CreateMap<RaceWeekendModel, RaceWeekendEntity>();
+
+            CreateMap<RaceYearEntity, RaceYearModel>();
+            CreateMap<RaceYearModel, RaceYearEntity>();
+
+            CreateMap<TeamEntity, TeamModel>();
+            CreateMap<TeamModel, TeamEntity>();
+            
+            CreateMap<RacePlace, RacePlaceModel>();
+            CreateMap<RacePlaceModel, RacePlace>();
+
         }
     }
 }

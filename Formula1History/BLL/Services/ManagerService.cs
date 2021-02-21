@@ -54,7 +54,7 @@ namespace BLL.Services
             return $"Driver: {manager.LastName} {manager.Name} deleted";
         }
 
-        public async Task<string> UpdateManagerAsync(Guid managerId, DriverModel managerModel)
+        public async Task<string> UpdateManagerAsync(Guid managerId, ManagerModel managerModel)
         {
             var manager = await _managerRepository.GetPeopleAsync(managerId, x => x.Id == managerId);
             if (manager == null) return "Driver is not found";

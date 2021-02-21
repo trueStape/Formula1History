@@ -2,6 +2,7 @@ using AutoMapper;
 using BLL.Interfaces;
 using BLL.Services;
 using DAL;
+using DAL.Entities.Race;
 using DAL.Interfaces;
 using DAL.Repositories;
 using Formula1History.Options;
@@ -50,11 +51,22 @@ namespace Formula1History
                 x.SwaggerDoc("v1", new OpenApiInfo { Title = "SoftLine Api", Version = "v1" });
             });
 
-           
+
             //TODO 3 Add Dependency life cycle (Dependency injection)
-            //Registration User services
+            //Registration Repository
+
             services.AddTransient<IDriverRepository, DriverRepository>();
+            services.AddTransient<IManagerRepository, ManagerRepository>();
+            //services.AddTransient<IPeople, PeopleRepository>();
+
+            services.AddTransient<IRaceRepository<RaceWeekendEntity>, RaceRepository<RaceWeekendEntity>>();
+            services.AddTransient<IRaceRepository<RaceYearEntity>, RaceRepository<RaceYearEntity>>();
+
+
+            //Registration services
             services.AddTransient<IDriverService, DriverService>();
+            services.AddTransient<IRaceService, RaceService>();
+
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
