@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DAL.Repositories
 {
@@ -82,6 +83,16 @@ namespace DAL.Repositories
         public async Task SaveAsync()
         {
             await Context.SaveChangesAsync();
+        }
+
+        public async Task<IDbContextTransaction> AddTransactionAsync()
+        {
+            return await Context.Database.BeginTransactionAsync();
+        }
+
+        public IDbContextTransaction AddTransaction()
+        {
+            return Context.Database.BeginTransaction();
         }
     }
 }

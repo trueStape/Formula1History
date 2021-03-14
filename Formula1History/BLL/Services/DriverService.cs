@@ -23,57 +23,120 @@ namespace BLL.Services
 
         public async Task CreateDriverAsync(DriverModel driver)
         {
-            var driverEntity = _mapper.Map<DriverEntity>(driver);
-            driverEntity.Id = Guid.NewGuid();
+            await using (var transaction = await _driverRepository.AddTransactionAsync())
+            {
+                try
+                {
+                    var driverEntity = _mapper.Map<DriverEntity>(driver);
+                    driverEntity.Id = Guid.NewGuid();
 
-            await _driverRepository.CreateAsync(driverEntity);
-            await _driverRepository.SaveAsync();
+                    await _driverRepository.CreateAsync(driverEntity);
+                    await _driverRepository.SaveAsync();
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
         }
 
         public async Task<DriverModel> GetDriverAsync(Guid driverId)
         {
-            var driverEntity = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
-            var driverModel = _mapper.Map<DriverModel>(driverEntity);
+            var driverModel = new DriverModel();
+            await using (var transaction = await _driverRepository.AddTransactionAsync())
+            {
+                try
+                {
+                    var driverEntity = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
+                    driverModel = _mapper.Map<DriverModel>(driverEntity);
+                    
+                    await transaction.CommitAsync();
+                    return driverModel;
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
 
             return driverModel;
         }
 
         public async Task<List<DriverModel>> GetAllDriversAsync()
         {
-            var drivers = await _driverRepository.GetAllPeopleAsync(x => x.LastName);
-            var driverModels = _mapper.Map<List<DriverEntity>, List<DriverModel>>(drivers);
+            var driverModels = new List<DriverModel>();
+            await using (var transaction = await _driverRepository.AddTransactionAsync())
+            {
+                try
+                {
+                    var drivers = await _driverRepository.GetAllPeopleAsync(x => x.LastName);
+                    driverModels = _mapper.Map<List<DriverEntity>, List<DriverModel>>(drivers);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
 
             return driverModels;
         }
 
         public async Task<string> DeleteDriverAsync(Guid driverId)
         {
-            var driver = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
-            if (driver == null) return "Driver is not found";
+            var driver = new DriverEntity();
+            await using (var transaction = await _driverRepository.AddTransactionAsync())
+            {
+                try
+                {
+                    driver = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
+                    if (driver == null) return "Driver is not found";
 
-            await _driverRepository.SaveAsync();
+                    await _driverRepository.SaveAsync();
 
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
+
+            //TODO 7 add correct return value
             return $"Driver: {driver.LastName} {driver.Name} deleted";
         }
 
         public async Task<string> UpdateDriverAsync(Guid driverId, DriverModel driverModel)
         {
-            var driver = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
-            if (driver == null) return "Driver is not found";
+            await using (var transaction = await _driverRepository.AddTransactionAsync())
+            {
+                try
+                {
+                    var driver = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
+                    if (driver == null) return "Driver is not found";
 
-            //TODO Add model attributes for update driver
-            driver.LastName = driverModel.LastName;
-            driver.Name = driverModel.Name;
+                    //TODO Add model attributes for update driver
+                    driver.LastName = driverModel.LastName;
+                    driver.Name = driverModel.Name;
 
-            //driver.Patronymic
-            //driver.CarNumber
-            //....
+                    //driver.Patronymic
+                    //driver.CarNumber
+                    //....
 
-            //
-            
-
-            await _driverRepository.SaveAsync();
-
+                    //
+                    
+                    await _driverRepository.SaveAsync();
+                    
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
             return "Driver Information Updated";
         }
     }

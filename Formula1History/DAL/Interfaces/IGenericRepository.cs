@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DAL.Interfaces
 {
@@ -86,5 +87,15 @@ namespace DAL.Interfaces
         /// Async save  entity entirely
         /// </summary>
         Task SaveAsync();
+
+        /// <summary>
+        /// Create new Transaction Async
+        /// </summary>
+        Task<IDbContextTransaction> AddTransactionAsync();
+
+        /// <summary>
+        /// Create new Transaction
+        /// </summary>
+        IDbContextTransaction AddTransaction();
     }
 }
