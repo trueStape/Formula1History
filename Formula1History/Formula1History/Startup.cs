@@ -3,6 +3,7 @@ using BLL.Interfaces;
 using BLL.Services;
 using DAL;
 using DAL.Entities.Race;
+using DAL.Entities.Team;
 using DAL.Interfaces;
 using DAL.Repositories;
 using Formula1History.Options;
@@ -53,19 +54,25 @@ namespace Formula1History
 
 
             //TODO 3 Add Dependency life cycle (Dependency injection)
-            //Registration Repository
 
+            /*
+             * Registration Repository
+             */
             services.AddTransient<IDriverRepository, DriverRepository>();
             services.AddTransient<IManagerRepository, ManagerRepository>();
             //services.AddTransient<IPeople, PeopleRepository>();
-
+            
             services.AddTransient<IRaceRepository<RaceWeekendEntity>, RaceRepository<RaceWeekendEntity>>();
             services.AddTransient<IRaceRepository<RaceYearEntity>, RaceRepository<RaceYearEntity>>();
+            services.AddTransient<ITeamRepository<TeamEntity>, TeamRepository<TeamEntity>>();
 
 
-            //Registration services
+            /*
+             * Registration services
+             */
             services.AddTransient<IDriverService, DriverService>();
             services.AddTransient<IRaceService, RaceService>();
+            services.AddTransient<ITeamService, TeamService>();
 
 
             // In production, the React files will be served from this directory
