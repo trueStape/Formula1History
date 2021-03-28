@@ -8,7 +8,7 @@ using BLL.Models;
 
 namespace Formula1History.Controllers
 {
-    [Route("api/team/")]
+    [Route("api/team")]
     [ApiController]
     public class TeamController : ControllerBase
     {
@@ -19,40 +19,39 @@ namespace Formula1History.Controllers
             _teamService = teamService;
         }
 
-        [HttpGet("team/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetTeamWeekendAsync(Guid id)
         {
             var team = await _teamService.GetTeamAsync(id);
             return Ok(team);
         }
 
-        [HttpGet("team")]
+        [HttpGet]
         public async Task<IActionResult> GetAllTeamsWeekendAsync()
         {
             var allTeams = await _teamService.GetAllTeamsAsync();
             return Ok(allTeams);
         }
 
-        [HttpPost("team")]
+        [HttpPost]
         public async Task<IActionResult> CreateTeamWeekendAsync(TeamModel team)
         {
             await _teamService.CreateTeamAsync(team);
             return Ok();
         }
 
-        [HttpDelete("team/{id}")]
+        [HttpDelete("{id}")]
         public async Task<OkObjectResult> DeleteTeamWeekendAsync(Guid id)
         {
             var result = await _teamService.DeleteTeamAsync(id);
             return Ok(result);
         }
 
-        [HttpPut("team/{id}")]
+        [HttpPut("{id}")]
         public async Task<OkObjectResult> UpdateTeamWeekendAsync(Guid id, TeamModel team)
         {
             var result = await _teamService.UpdateTeamAsync(id, team);
             return Ok(result);
         }
-    }
     }
 }
