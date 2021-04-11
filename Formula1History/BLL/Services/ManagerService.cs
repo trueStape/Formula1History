@@ -6,6 +6,7 @@ using BLL.Interfaces;
 using BLL.Models;
 using DAL.Entities.Peoples;
 using DAL.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace BLL.Services
 {
@@ -13,11 +14,15 @@ namespace BLL.Services
     {
         private readonly IManagerRepository _managerRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<ManagerService> _logger;
 
-        public ManagerService(IManagerRepository managerRepository, IMapper mapper)
+        public ManagerService(IManagerRepository managerRepository,
+            IMapper mapper,
+            ILogger<ManagerService> logger)
         {
             _managerRepository = managerRepository;
             _mapper = mapper;
+            _logger = logger;
         }
         public async Task CreateManagerAsync(ManagerModel manager)
         {
@@ -33,8 +38,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Create Manager Async. ManagerModel {manager}");
                     await transaction.RollbackAsync();
                 }
             }
@@ -52,8 +58,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during  Get Manager id: {managerId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -73,8 +80,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during  Get All Managers Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -96,8 +104,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Delete Manager id: {managerId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -127,8 +136,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Update Manager Async id: {managerId} Async. DriverModel {managerModel}");
                     await transaction.RollbackAsync();
                 }
             }

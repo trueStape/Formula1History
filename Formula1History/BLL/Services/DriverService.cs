@@ -6,6 +6,7 @@ using BLL.Interfaces;
 using BLL.Models;
 using DAL.Entities.Peoples;
 using DAL.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace BLL.Services
 {
@@ -13,11 +14,15 @@ namespace BLL.Services
     {
         private readonly IDriverRepository _driverRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<DriverService> _logger;
 
-        public DriverService(IDriverRepository driverRepository, IMapper mapper)
+        public DriverService(IDriverRepository driverRepository,
+            IMapper mapper,
+            ILogger<DriverService> logger)
         {
             _driverRepository = driverRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
@@ -35,8 +40,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Create Driver Async.DriverModel {driver}");
                     await transaction.RollbackAsync();
                 }
             }
@@ -55,8 +61,9 @@ namespace BLL.Services
                     await transaction.CommitAsync();
                     return driverModel;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during  Get Driver id: {driverId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -76,8 +83,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during  Get All Drivers Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -99,8 +107,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Delete Driver id: {driverId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -132,8 +141,9 @@ namespace BLL.Services
                     
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Update Driver Async id: {driverId} Async. DriverModel {driverModel}");
                     await transaction.RollbackAsync();
                 }
             }

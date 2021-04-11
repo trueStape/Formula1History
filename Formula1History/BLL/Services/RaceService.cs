@@ -6,6 +6,7 @@ using BLL.Interfaces;
 using BLL.Models;
 using DAL.Entities.Race;
 using DAL.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace BLL.Services
 {
@@ -14,14 +15,17 @@ namespace BLL.Services
         private readonly IRaceRepository<RaceWeekendEntity> _raceWeekendRepository;
         private readonly IRaceRepository<RaceYearEntity> _raceYearRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<RaceService> _logger;
 
         public RaceService(IRaceRepository<RaceWeekendEntity> raceWeekendRepository, 
                            IRaceRepository<RaceYearEntity> raceYearRepository, 
-                           IMapper mapper)
+                           IMapper mapper,
+                           ILogger<RaceService> logger)
         {
             _raceWeekendRepository = raceWeekendRepository;
             _raceYearRepository = raceYearRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
@@ -40,8 +44,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Race Weekend Async. RaceWeekendModel {race}");
                     await transaction.RollbackAsync();
                 }
             }
@@ -60,8 +65,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during  Get Race Weekend id: {raceId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -81,8 +87,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during  Get All Races Weekend Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -104,8 +111,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Delete Manager id: {raceId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -130,8 +138,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Update Race Weekend Async id: {raceId} Async. RaceWeekendModel {raceModel}");
                     await transaction.RollbackAsync();
                 }
             }
@@ -155,8 +164,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Create Race Year Async. RaceYearModel {race}");
                     await transaction.RollbackAsync();
                 }
             }
@@ -174,8 +184,9 @@ namespace BLL.Services
                     
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during  Get Race Year id: {raceId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -195,8 +206,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during  Get All Races Year Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -218,8 +230,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Delete Race Year id: {raceId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -244,8 +257,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Update RaceYear Async id: {raceId} Async. DriverModel {raceModel}");
                     await transaction.RollbackAsync();
                 }
             }

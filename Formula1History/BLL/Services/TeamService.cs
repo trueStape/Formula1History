@@ -6,6 +6,7 @@ using BLL.Interfaces;
 using BLL.Models;
 using DAL.Entities.Team;
 using DAL.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace BLL.Services
 {
@@ -13,11 +14,14 @@ namespace BLL.Services
     {
         private readonly ITeamRepository<TeamEntity> _teamRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<TeamService> _logger;
         public TeamService(ITeamRepository<TeamEntity> teamRepository,
-                           IMapper mapper)
+                           IMapper mapper,
+                           ILogger<TeamService> logger)
         {
             _teamRepository = teamRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task CreateTeamAsync(TeamModel team)
@@ -34,8 +38,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error during create Team Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -53,8 +58,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Get Team id : {teamId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -74,8 +80,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error during Get All Teams Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -98,8 +105,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Delete Team id : {teamId} Async.");
                     await transaction.RollbackAsync();
                 }
             }
@@ -124,8 +132,9 @@ namespace BLL.Services
 
                     await transaction.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, $"Error during Delete Team id : {teamId} Async. TeamModel {teamModel}");
                     await transaction.RollbackAsync();
                 }
             }
