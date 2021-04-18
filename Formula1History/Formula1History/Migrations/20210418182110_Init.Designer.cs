@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Formula1History.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210214170518_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210418182110_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,12 +48,12 @@ namespace Formula1History.Migrations
                     b.Property<string>("Patronymic")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("TeamEntityId")
+                    b.Property<Guid>("TeamId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TeamEntityId");
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Driver");
                 });
@@ -63,6 +63,24 @@ namespace Formula1History.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("About")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateDeath")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Patronymic")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -158,7 +176,7 @@ namespace Formula1History.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("NextTeamId")
+                    b.Property<Guid>("NextTeamId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("RaceWeekendEntityId")
@@ -171,8 +189,6 @@ namespace Formula1History.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NextTeamId");
 
                     b.HasIndex("RaceWeekendEntityId");
 
@@ -196,9 +212,13 @@ namespace Formula1History.Migrations
 
             modelBuilder.Entity("DAL.Entities.Peoples.DriverEntity", b =>
                 {
-                    b.HasOne("DAL.Entities.Team.TeamEntity", null)
+                    b.HasOne("DAL.Entities.Team.TeamEntity", "Team")
                         .WithMany("Drivers")
-                        .HasForeignKey("TeamEntityId");
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("DAL.Entities.Race.RacePlace", b =>
@@ -229,15 +249,9 @@ namespace Formula1History.Migrations
 
             modelBuilder.Entity("DAL.Entities.Team.TeamEntity", b =>
                 {
-                    b.HasOne("DAL.Entities.Team.TeamEntity", "NextTeam")
-                        .WithMany()
-                        .HasForeignKey("NextTeamId");
-
                     b.HasOne("DAL.Entities.Race.RaceWeekendEntity", null)
                         .WithMany("Teams")
                         .HasForeignKey("RaceWeekendEntityId");
-
-                    b.Navigation("NextTeam");
                 });
 
             modelBuilder.Entity("ManagerEntityTeamEntity", b =>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Formula1History.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,13 @@ namespace Formula1History.Migrations
                 name: "Manager",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Patronymic = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateDeath = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    About = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -78,7 +84,7 @@ namespace Formula1History.Migrations
                     YearFoundation = table.Column<DateTime>(type: "datetime2", nullable: false),
                     YearClose = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NextTeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    NextTeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RaceWeekendEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -90,12 +96,6 @@ namespace Formula1History.Migrations
                         principalTable: "RaceWeekend",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Team_Team_NextTeamId",
-                        column: x => x.NextTeamId,
-                        principalTable: "Team",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -104,7 +104,7 @@ namespace Formula1History.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CarNumber = table.Column<int>(type: "int", nullable: false),
-                    TeamEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Patronymic = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -116,11 +116,11 @@ namespace Formula1History.Migrations
                 {
                     table.PrimaryKey("PK_Driver", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Driver_Team_TeamEntityId",
-                        column: x => x.TeamEntityId,
+                        name: "FK_Driver_Team_TeamId",
+                        column: x => x.TeamId,
                         principalTable: "Team",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -148,9 +148,9 @@ namespace Formula1History.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Driver_TeamEntityId",
+                name: "IX_Driver_TeamId",
                 table: "Driver",
-                column: "TeamEntityId");
+                column: "TeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ManagerEntityTeamEntity_TeamsId",
@@ -176,11 +176,6 @@ namespace Formula1History.Migrations
                 name: "IX_RaceWeekend_RaceYearEntityId",
                 table: "RaceWeekend",
                 column: "RaceYearEntityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Team_NextTeamId",
-                table: "Team",
-                column: "NextTeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Team_RaceWeekendEntityId",
@@ -215,7 +210,7 @@ namespace Formula1History.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Driver_Team_TeamEntityId",
+                name: "FK_Driver_Team_TeamId",
                 table: "Driver");
 
             migrationBuilder.DropTable(

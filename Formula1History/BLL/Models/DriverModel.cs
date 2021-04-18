@@ -7,5 +7,6 @@ namespace BLL.Models
         public Guid Id { get; set; }
         public int CarNumber { get; set; }
         public Guid TeamId { get; set; }
+        public TeamModel Team { get; set; }
     }
 }

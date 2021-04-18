@@ -26,7 +26,7 @@ namespace DAL.Repositories
                 .Where(predicate)
                 .SingleOrDefaultAsync();
         }
-        public Task<List<T>> GetAllPeopleAsync(Expression<Func<T, string>> predicate)
+        public virtual Task<List<T>> GetAllPeopleAsync(Expression<Func<T, string>> predicate)
         {
             return Query()
                 .OrderBy(predicate)
