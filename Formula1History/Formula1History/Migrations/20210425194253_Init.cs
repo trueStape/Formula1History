@@ -37,18 +37,24 @@ namespace Formula1History.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RacePlace",
+                name: "Team",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Place = table.Column<int>(type: "int", nullable: false),
-                    Pts = table.Column<int>(type: "int", nullable: false),
-                    DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RaceWeekendEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    YearFoundation = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    YearClose = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NextTeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RacePlace", x => x.Id);
+                    table.PrimaryKey("PK_Team", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Team_Team_NextTeamId",
+                        column: x => x.NextTeamId,
+                        principalTable: "Team",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -56,12 +62,12 @@ namespace Formula1History.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RaceYearId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RaceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Descriptions = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartWeekend = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FinishWeekend = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FastLapId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     RaceYearEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -71,29 +77,6 @@ namespace Formula1History.Migrations
                         name: "FK_RaceWeekend_RaceYear_RaceYearEntityId",
                         column: x => x.RaceYearEntityId,
                         principalTable: "RaceYear",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Team",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    YearFoundation = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    YearClose = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NextTeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RaceWeekendEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Team", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Team_RaceWeekend_RaceWeekendEntityId",
-                        column: x => x.RaceWeekendEntityId,
-                        principalTable: "RaceWeekend",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -147,6 +130,68 @@ namespace Formula1History.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ConnectionTeamAndRaceWeekend",
+                columns: table => new
+                {
+                    RaceWeekendId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TeamId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RaceWeekendEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConnectionTeamAndRaceWeekend", x => x.RaceWeekendId);
+                    table.ForeignKey(
+                        name: "FK_ConnectionTeamAndRaceWeekend_RaceWeekend_RaceWeekendEntityId",
+                        column: x => x.RaceWeekendEntityId,
+                        principalTable: "RaceWeekend",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ConnectionTeamAndRaceWeekend_Team_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "Team",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RacePlace",
+                columns: table => new
+                {
+                    RaceWeekendId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Place = table.Column<int>(type: "int", nullable: false),
+                    Pts = table.Column<int>(type: "int", nullable: false),
+                    DriverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RaceWeekendEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RacePlace", x => x.RaceWeekendId);
+                    table.ForeignKey(
+                        name: "FK_RacePlace_Driver_DriverId",
+                        column: x => x.DriverId,
+                        principalTable: "Driver",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RacePlace_RaceWeekend_RaceWeekendEntityId",
+                        column: x => x.RaceWeekendEntityId,
+                        principalTable: "RaceWeekend",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConnectionTeamAndRaceWeekend_RaceWeekendEntityId",
+                table: "ConnectionTeamAndRaceWeekend",
+                column: "RaceWeekendEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConnectionTeamAndRaceWeekend_TeamId",
+                table: "ConnectionTeamAndRaceWeekend",
+                column: "TeamId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Driver_TeamId",
                 table: "Driver",
@@ -168,50 +213,20 @@ namespace Formula1History.Migrations
                 column: "RaceWeekendEntityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RaceWeekend_FastLapId",
-                table: "RaceWeekend",
-                column: "FastLapId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RaceWeekend_RaceYearEntityId",
                 table: "RaceWeekend",
                 column: "RaceYearEntityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Team_RaceWeekendEntityId",
+                name: "IX_Team_NextTeamId",
                 table: "Team",
-                column: "RaceWeekendEntityId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_RacePlace_Driver_DriverId",
-                table: "RacePlace",
-                column: "DriverId",
-                principalTable: "Driver",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_RacePlace_RaceWeekend_RaceWeekendEntityId",
-                table: "RacePlace",
-                column: "RaceWeekendEntityId",
-                principalTable: "RaceWeekend",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_RaceWeekend_Driver_FastLapId",
-                table: "RaceWeekend",
-                column: "FastLapId",
-                principalTable: "Driver",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                column: "NextTeamId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Driver_Team_TeamId",
-                table: "Driver");
+            migrationBuilder.DropTable(
+                name: "ConnectionTeamAndRaceWeekend");
 
             migrationBuilder.DropTable(
                 name: "ManagerEntityTeamEntity");
@@ -223,13 +238,13 @@ namespace Formula1History.Migrations
                 name: "Manager");
 
             migrationBuilder.DropTable(
-                name: "Team");
+                name: "Driver");
 
             migrationBuilder.DropTable(
                 name: "RaceWeekend");
 
             migrationBuilder.DropTable(
-                name: "Driver");
+                name: "Team");
 
             migrationBuilder.DropTable(
                 name: "RaceYear");

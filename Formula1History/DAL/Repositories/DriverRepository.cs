@@ -18,6 +18,14 @@ namespace DAL.Repositories
             _context = context;
         }
 
+        public override async Task<DriverEntity> GetPeopleAsync(Guid id, Expression<Func<DriverEntity, bool>> predicate)
+        {
+            return await _context.Driver
+                .Include(x => x.Team)
+                .Where(predicate)
+                .SingleOrDefaultAsync();
+        }
+
         public override async Task<List<DriverEntity>> GetAllPeopleAsync(Expression<Func<DriverEntity, string>> predicate)
         {
             return await _context.Driver

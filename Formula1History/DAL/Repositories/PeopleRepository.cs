@@ -20,7 +20,7 @@ namespace DAL.Repositories
             _context = context;
         }
 
-        public Task<T> GetPeopleAsync(Guid id, Expression<Func<T, bool>> predicate)
+        public virtual Task<T> GetPeopleAsync(Guid id, Expression<Func<T, bool>> predicate)
         {
             return Query()
                 .Where(predicate)

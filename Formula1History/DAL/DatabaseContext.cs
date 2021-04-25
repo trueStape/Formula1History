@@ -13,13 +13,15 @@ namespace DAL
 
         }
 
-        //TODO 1 Add Entity relationship
+        //TODO 1 [Done] Add Entity relationship
         public DbSet<DriverEntity> Driver { get; set; }
         public DbSet<ManagerEntity> Manager { get; set; }
         public DbSet<RaceWeekendEntity> RaceWeekend { get; set; }
         public DbSet<RaceYearEntity> RaceYear { get; set; }
         public DbSet<TeamEntity> Team { get; set; }
-        
+        public DbSet<ConnectionTeamAndRaceWeekend> ConnectionTeamAndRaceWeekend { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

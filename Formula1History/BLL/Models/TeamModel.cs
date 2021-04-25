@@ -10,7 +10,7 @@ namespace BLL.Models
         public DateTime YearFoundation { get; set; }
         public DateTime YearClose { get; set; }
         public string Description { get; set; }
-        public Guid NextTeamId { get; set; }
+        public Guid? NextTeamId { get; set; }
         //public List<DriverModel> Drivers { get; set; }
         //public List<ManagerModel> Managers { get; set; }
     }

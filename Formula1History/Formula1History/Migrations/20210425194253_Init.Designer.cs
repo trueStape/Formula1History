@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Formula1History.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210418182110_Init")]
+    [Migration("20210425194253_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,13 +87,34 @@ namespace Formula1History.Migrations
                     b.ToTable("Manager");
                 });
 
-            modelBuilder.Entity("DAL.Entities.Race.RacePlace", b =>
+            modelBuilder.Entity("DAL.Entities.Race.ConnectionTeamAndRaceWeekend", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("RaceWeekendId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("DriverId")
+                    b.Property<Guid?>("RaceWeekendEntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TeamId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("RaceWeekendId");
+
+                    b.HasIndex("RaceWeekendEntityId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("ConnectionTeamAndRaceWeekend");
+                });
+
+            modelBuilder.Entity("DAL.Entities.Race.RacePlace", b =>
+                {
+                    b.Property<Guid>("RaceWeekendId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DriverId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Place")
@@ -105,7 +126,7 @@ namespace Formula1History.Migrations
                     b.Property<Guid?>("RaceWeekendEntityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("RaceWeekendId");
 
                     b.HasIndex("DriverId");
 
@@ -126,9 +147,6 @@ namespace Formula1History.Migrations
                     b.Property<string>("Descriptions")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("FastLapId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("FinishWeekend")
                         .HasColumnType("datetime2");
 
@@ -138,12 +156,13 @@ namespace Formula1History.Migrations
                     b.Property<Guid?>("RaceYearEntityId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("RaceYearId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("StartWeekend")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FastLapId");
 
                     b.HasIndex("RaceYearEntityId");
 
@@ -176,10 +195,7 @@ namespace Formula1History.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("NextTeamId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("RaceWeekendEntityId")
+                    b.Property<Guid?>("NextTeamId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("YearClose")
@@ -190,7 +206,7 @@ namespace Formula1History.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RaceWeekendEntityId");
+                    b.HasIndex("NextTeamId");
 
                     b.ToTable("Team");
                 });
@@ -221,11 +237,28 @@ namespace Formula1History.Migrations
                     b.Navigation("Team");
                 });
 
+            modelBuilder.Entity("DAL.Entities.Race.ConnectionTeamAndRaceWeekend", b =>
+                {
+                    b.HasOne("DAL.Entities.Race.RaceWeekendEntity", null)
+                        .WithMany("Teams")
+                        .HasForeignKey("RaceWeekendEntityId");
+
+                    b.HasOne("DAL.Entities.Team.TeamEntity", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Team");
+                });
+
             modelBuilder.Entity("DAL.Entities.Race.RacePlace", b =>
                 {
                     b.HasOne("DAL.Entities.Peoples.DriverEntity", "Driver")
                         .WithMany()
-                        .HasForeignKey("DriverId");
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DAL.Entities.Race.RaceWeekendEntity", null)
                         .WithMany("Results")
@@ -236,22 +269,18 @@ namespace Formula1History.Migrations
 
             modelBuilder.Entity("DAL.Entities.Race.RaceWeekendEntity", b =>
                 {
-                    b.HasOne("DAL.Entities.Peoples.DriverEntity", "FastLap")
-                        .WithMany()
-                        .HasForeignKey("FastLapId");
-
                     b.HasOne("DAL.Entities.Race.RaceYearEntity", null)
                         .WithMany("RacesWeekends")
                         .HasForeignKey("RaceYearEntityId");
-
-                    b.Navigation("FastLap");
                 });
 
             modelBuilder.Entity("DAL.Entities.Team.TeamEntity", b =>
                 {
-                    b.HasOne("DAL.Entities.Race.RaceWeekendEntity", null)
-                        .WithMany("Teams")
-                        .HasForeignKey("RaceWeekendEntityId");
+                    b.HasOne("DAL.Entities.Team.TeamEntity", "NextTeam")
+                        .WithMany()
+                        .HasForeignKey("NextTeamId");
+
+                    b.Navigation("NextTeam");
                 });
 
             modelBuilder.Entity("ManagerEntityTeamEntity", b =>
