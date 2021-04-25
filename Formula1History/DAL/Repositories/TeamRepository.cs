@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DAL.Entities.Team;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,9 +26,11 @@ namespace DAL.Repositories
                 .SingleOrDefaultAsync();
         }
 
-        public Task<List<T>> GetAllTeamsAsync(Expression<Func<T, string>> predicate)
+        public async Task<List<TeamEntity>> GetAllTeamsAsync(Expression<Func<TeamEntity, string>> predicate)
         {
-            return Query()
+            return await _context.Team
+                .Include(x => x.Drivers)
+                .Include(x =>x.Managers)
                 .OrderBy(predicate)
                 .ToListAsync();
         }

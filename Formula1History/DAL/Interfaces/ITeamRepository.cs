@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DAL.Entities.Team;
 
 namespace DAL.Interfaces
 {
@@ -9,6 +10,6 @@ namespace DAL.Interfaces
         where T : class
     {
         Task<T> GetTeamAsync(Guid id, Expression<Func<T, bool>> predicate);
-        Task<List<T>> GetAllTeamsAsync(Expression<Func<T, string>> predicate);
+        Task<List<TeamEntity>> GetAllTeamsAsync(Expression<Func<TeamEntity, string>> predicate);
     }
 }
