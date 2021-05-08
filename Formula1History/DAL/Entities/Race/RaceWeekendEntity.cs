@@ -9,7 +9,7 @@ namespace DAL.Entities.Race
     {
         [Key]
         public Guid Id { get; set; }
-        public Guid RaceYearId { get; set; }
+        public Guid RaceYearEntityId { get; set; }
         public string RaceName { get; set; }
         public string Country { get; set; }
         public string Descriptions { get; set; }

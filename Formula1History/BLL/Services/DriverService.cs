@@ -95,7 +95,7 @@ namespace BLL.Services
 
         public async Task<string> DeleteDriverAsync(Guid driverId)
         {
-            var driver = new DriverEntity();
+            DriverEntity driver = null;
             await using (var transaction = await _driverRepository.AddTransactionAsync())
             {
                 try
@@ -103,9 +103,11 @@ namespace BLL.Services
                     driver = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
                     if (driver == null) return "Driver is not found";
 
+                    _driverRepository.Delete(driver);
+
                     await _driverRepository.SaveAsync();
 
-                    await transaction.CommitAsync();
+                    await transaction.CommitAsync(); 
                 }
                 catch (Exception ex)
                 {
@@ -114,8 +116,7 @@ namespace BLL.Services
                 }
             }
 
-            //TODO 7 add correct return value
-            return $"Driver: {driver.LastName} {driver.Name} deleted";
+            return driver != null ? $"Driver: {driver.LastName} {driver.Name} deleted" : "Driver not delete";
         }
 
         public async Task<string> UpdateDriverAsync(Guid driverId, DriverModel driverModel)

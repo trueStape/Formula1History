@@ -92,7 +92,7 @@ namespace BLL.Services
 
         public async Task<string> DeleteTeamAsync(Guid teamId)
         {
-            var team = new TeamEntity();
+            TeamEntity team = null;
             await using (var transaction = await _teamRepository.AddTransactionAsync())
             {
                 try
@@ -100,7 +100,7 @@ namespace BLL.Services
                     team = await _teamRepository.GetTeamAsync(teamId, x => x.Id == teamId);
                     if (team == null) return "Team is not found";
 
-                    //TODO 8 add delete method for each services
+                    _teamRepository.Delete(team);
                     await _teamRepository.SaveAsync();
 
                     await transaction.CommitAsync();
@@ -111,8 +111,7 @@ namespace BLL.Services
                     await transaction.RollbackAsync();
                 }
             }
-            //TODO 7 add correct return value
-            return $"Team: {team.Name}  deleted";
+            return team != null ? $"Team: {team.Name}  deleted" : "Team not delete";
         }
 
         public async Task<string> UpdateTeamAsync(Guid teamId, TeamModel teamModel)

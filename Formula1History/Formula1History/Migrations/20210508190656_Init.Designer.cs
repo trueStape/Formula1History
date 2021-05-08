@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Formula1History.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210425194253_Init")]
+    [Migration("20210508190656_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -153,10 +153,7 @@ namespace Formula1History.Migrations
                     b.Property<string>("RaceName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RaceYearEntityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RaceYearId")
+                    b.Property<Guid>("RaceYearEntityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartWeekend")
@@ -271,7 +268,9 @@ namespace Formula1History.Migrations
                 {
                     b.HasOne("DAL.Entities.Race.RaceYearEntity", null)
                         .WithMany("RacesWeekends")
-                        .HasForeignKey("RaceYearEntityId");
+                        .HasForeignKey("RaceYearEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DAL.Entities.Team.TeamEntity", b =>

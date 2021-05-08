@@ -99,14 +99,14 @@ namespace BLL.Services
 
         public async Task<string> DeleteRaceWeekendAsync(Guid raceId)
         {
-            var race = new RaceWeekendEntity();
+            RaceWeekendEntity race = null;
             await using (var transaction = await _raceWeekendRepository.AddTransactionAsync())
             {
                 try
                 {
                     race = await _raceWeekendRepository.GetRaceAsync(raceId, x => x.Id == raceId);
                     if (race == null) return "Race is not found";
-
+                    _raceWeekendRepository.Delete(race);
                     await _raceWeekendRepository.SaveAsync();
 
                     await transaction.CommitAsync();
@@ -117,8 +117,7 @@ namespace BLL.Services
                     await transaction.RollbackAsync();
                 }
             }
-            //TODO 7 add correct return value
-            return $"Race: {race.RaceName}  deleted";
+            return race != null ? $"Race: {race.RaceName}  deleted" : "Race weekend not delete";
         }
 
         public async Task<string> UpdateRaceWeekendAsync(Guid raceId, RaceWeekendModel raceModel)
@@ -218,14 +217,14 @@ namespace BLL.Services
 
         public async Task<string> DeleteRaceYearAsync(Guid raceId)
         {
-            var raceYear = new RaceYearEntity();
+            RaceYearEntity raceYear = null;
             await using (var transaction = await _raceYearRepository.AddTransactionAsync())
             {
                 try
                 {
                     raceYear = await _raceYearRepository.GetRaceAsync(raceId, x => x.Id == raceId);
                     if (raceYear == null) return "Race is not found";
-
+                    _raceYearRepository.Delete(raceYear);
                     await _raceYearRepository.SaveAsync();
 
                     await transaction.CommitAsync();
@@ -237,8 +236,7 @@ namespace BLL.Services
                 }
             }
             
-            //TODO 7 add correct return value
-            return $"Race: {raceYear.Year}  deleted";
+            return raceYear != null ? $"Race: {raceYear.Year}  deleted" : "Race year not delete";
         }
 
         public async Task<string> UpdateRaceYearAsync(Guid raceId, RaceYearModel raceModel)

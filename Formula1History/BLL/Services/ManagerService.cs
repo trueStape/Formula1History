@@ -92,7 +92,7 @@ namespace BLL.Services
 
         public async Task<string> DeleteManagerAsync(Guid managerId)
         {
-            var manager = new ManagerEntity();
+            ManagerEntity manager = null;
             await using (var transaction = await _managerRepository.AddTransactionAsync())
             {
                 try
@@ -100,6 +100,7 @@ namespace BLL.Services
                     manager = await _managerRepository.GetPeopleAsync(managerId, x => x.Id == managerId);
                     if (manager == null) return "Driver is not found";
 
+                    _managerRepository.Delete(manager);
                     await _managerRepository.SaveAsync();
 
                     await transaction.CommitAsync();
@@ -110,8 +111,8 @@ namespace BLL.Services
                     await transaction.RollbackAsync();
                 }
             }
-            //TODO 7 add correct return value
-            return $"Driver: {manager.LastName} {manager.Name} deleted";
+
+            return manager != null ? $"Driver: {manager.LastName} {manager.Name} deleted" : "Manager not delete";
         }
 
         public async Task<string> UpdateManagerAsync(Guid managerId, ManagerModel managerModel)

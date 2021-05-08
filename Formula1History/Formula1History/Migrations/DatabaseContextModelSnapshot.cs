@@ -151,10 +151,7 @@ namespace Formula1History.Migrations
                     b.Property<string>("RaceName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RaceYearEntityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RaceYearId")
+                    b.Property<Guid>("RaceYearEntityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartWeekend")
@@ -269,7 +266,9 @@ namespace Formula1History.Migrations
                 {
                     b.HasOne("DAL.Entities.Race.RaceYearEntity", null)
                         .WithMany("RacesWeekends")
-                        .HasForeignKey("RaceYearEntityId");
+                        .HasForeignKey("RaceYearEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DAL.Entities.Team.TeamEntity", b =>

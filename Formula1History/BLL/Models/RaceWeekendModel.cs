@@ -6,6 +6,7 @@ namespace BLL.Models
     public class RaceWeekendModel
     {
         public Guid Id { get; set; }
+        public Guid RaceYearEntityId { get; set; }
         public string RaceName { get; set; }
         public string Country { get; set; }
         public string Descriptions { get; set; }

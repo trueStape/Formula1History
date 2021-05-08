@@ -54,7 +54,8 @@ namespace Formula1History.Migrations
                         name: "FK_Team_Team_NextTeamId",
                         column: x => x.NextTeamId,
                         principalTable: "Team",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,13 +63,12 @@ namespace Formula1History.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RaceYearId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RaceYearEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RaceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Descriptions = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StartWeekend = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FinishWeekend = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RaceYearEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    FinishWeekend = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,7 +78,7 @@ namespace Formula1History.Migrations
                         column: x => x.RaceYearEntityId,
                         principalTable: "RaceYear",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

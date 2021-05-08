@@ -10,7 +10,5 @@ namespace DAL.Entities.Peoples
         [Key]
         public Guid Id { get; set; }
         public List<TeamEntity> Teams { get; set; }
-        //TODO 6 Add relationship between RaceYear and Team
-        //public TimeInTeam TimeInTeam { get; set; }
     }
 }
