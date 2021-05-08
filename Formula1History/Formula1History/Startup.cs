@@ -53,27 +53,32 @@ namespace Formula1History
                 x.SwaggerDoc("v1", new OpenApiInfo { Title = "SoftLine Api", Version = "v1" });
             });
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
 
             //TODO 3 Add Dependency life cycle (Dependency injection)
 
             /*
              * Registration Repository
              */
-            services.AddTransient<IDriverRepository, DriverRepository>();
-            services.AddTransient<IManagerRepository, ManagerRepository>();
-            //services.AddTransient<IPeople, PeopleRepository>();
-            
-            services.AddTransient<IRaceRepository<RaceWeekendEntity>, RaceRepository<RaceWeekendEntity>>();
-            services.AddTransient<IRaceRepository<RaceYearEntity>, RaceRepository<RaceYearEntity>>();
-            services.AddTransient<ITeamRepository<TeamEntity>, TeamRepository<TeamEntity>>();
 
+            //services.AddTransient<IPeople, PeopleRepository>();
+            services
+                .AddScoped<IDriverRepository, DriverRepository>()
+                .AddScoped<IManagerRepository, ManagerRepository>()
+                .AddScoped<IRaceRepository<RaceWeekendEntity>, RaceRepository<RaceWeekendEntity>>()
+                .AddScoped<IRaceRepository<RaceYearEntity>, RaceRepository<RaceYearEntity>>()
+                .AddScoped<ITeamRepository<TeamEntity>, TeamRepository<TeamEntity>>();
 
             /*
              * Registration services
              */
-            services.AddTransient<IDriverService, DriverService>();
-            services.AddTransient<IRaceService, RaceService>();
-            services.AddTransient<ITeamService, TeamService>();
+            services
+                .AddScoped<IDriverService, DriverService>()
+                .AddScoped<IRaceService, RaceService>()
+                .AddScoped<ITeamService, TeamService>();
 
 
             // In production, the React files will be served from this directory
