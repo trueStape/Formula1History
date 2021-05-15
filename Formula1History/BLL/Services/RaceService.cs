@@ -129,12 +129,14 @@ namespace BLL.Services
                     var race = await _raceWeekendRepository.GetRaceAsync(raceId, x => x.Id == raceId);
                     if (race == null) return "Race is not found";
 
-                    //TODO Add model attributes for update driver
                     race.RaceName = raceModel.RaceName;
-                    //....
+                    race.Country = raceModel.Country;
+                    race.Descriptions = raceModel.Descriptions;
+                    race.StartWeekend = raceModel.StartWeekend;
+                    race.FinishWeekend = raceModel.FinishWeekend;
+                    race.RaceYearEntityId = raceModel.RaceYearEntityId;
 
                     await _raceWeekendRepository.SaveAsync();
-
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
@@ -248,11 +250,9 @@ namespace BLL.Services
                     var raceYear = await _raceYearRepository.GetRaceAsync(raceId, x => x.Id == raceId);
                     if (raceYear == null) return "Race is not found";
 
-                    //TODO Add model attributes for update driver
                     raceYear.Year = raceModel.Year;
-                    //....
-                    await _raceYearRepository.SaveAsync();
 
+                    await _raceYearRepository.SaveAsync();
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)

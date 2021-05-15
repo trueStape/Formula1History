@@ -128,18 +128,16 @@ namespace BLL.Services
                     var driver = await _driverRepository.GetPeopleAsync(driverId, x => x.Id == driverId);
                     if (driver == null) return "Driver is not found";
 
-                    //TODO Add model attributes for update driver
-                    driver.LastName = driverModel.LastName;
                     driver.Name = driverModel.Name;
+                    driver.LastName = driverModel.LastName;
+                    driver.Patronymic = driverModel.Patronymic;
+                    driver.CarNumber = driverModel.CarNumber;
+                    driver.About = driverModel.About;
+                    driver.TeamId = driverModel.TeamId;
+                    driver.DateBirth = driverModel.DateBirth;
+                    driver.DateDeath = driverModel.DateDeath;
 
-                    //driver.Patronymic
-                    //driver.CarNumber
-                    //....
-
-                    //
-                    
                     await _driverRepository.SaveAsync();
-                    
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)

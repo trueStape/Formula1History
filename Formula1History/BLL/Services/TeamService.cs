@@ -123,12 +123,13 @@ namespace BLL.Services
                     var team = await _teamRepository.GetTeamAsync(teamId, x => x.Id == teamId);
                     if (team == null) return "Team is not found";
 
-                    //TODO Add model attributes for update driver
                     team.Name = teamModel.Name;
-                    //....
+                    team.Description = teamModel.Description;
+                    team.NextTeamId = teamModel.NextTeamId;
+                    team.YearClose = teamModel.YearClose;
+                    team.YearFoundation = teamModel.YearFoundation;
 
                     await _teamRepository.SaveAsync();
-
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)

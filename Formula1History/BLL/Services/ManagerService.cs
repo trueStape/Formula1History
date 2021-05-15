@@ -124,17 +124,14 @@ namespace BLL.Services
                     var manager = await _managerRepository.GetPeopleAsync(managerId, x => x.Id == managerId);
                     if (manager == null) return "Driver is not found";
 
-                    //TODO Add model attributes for update manager
-                    manager.LastName = managerModel.LastName;
                     manager.Name = managerModel.Name;
+                    manager.LastName = managerModel.LastName;
+                    manager.Patronymic = managerModel.Patronymic;
+                    manager.About = managerModel.About;
+                    manager.DateBirth = managerModel.DateBirth;
+                    manager.DateDeath = managerModel.DateDeath;
 
-                    //manager.Patronymic
-                    //manager.CarNumber
-                    //....
-
-                    //
                     await _managerRepository.SaveAsync();
-
                     await transaction.CommitAsync();
                 }
                 catch (Exception ex)
