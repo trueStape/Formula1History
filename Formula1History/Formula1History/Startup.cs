@@ -57,14 +57,10 @@ namespace Formula1History
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
 
-
-            //TODO 3 Add Dependency life cycle (Dependency injection)
-
             /*
              * Registration Repository
              */
 
-            //services.AddTransient<IPeople, PeopleRepository>();
             services
                 .AddScoped<IDriverRepository, DriverRepository>()
                 .AddScoped<IManagerRepository, ManagerRepository>()
@@ -114,6 +110,7 @@ namespace Formula1History
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
             //Serilog
             app.UseSerilogRequestLogging();
             app.UseRouting();
